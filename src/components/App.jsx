@@ -1,62 +1,49 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import ContactForm from "components/ContactForm";
 import ContactList from "components/ContactList";
 import FilterContacts from "components/FilterContacts";
 import AppContainer from "components/App.styled";
 
+const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
 
-class App extends Component {
-  state = {
-    contacts: [
-    ],
-    filter: '',
+  useEffect(() => {  
+    if (!contacts[0]) {
+      setContacts(JSON.parse(localStorage.getItem('contacts')));
+      console.log('open');
+      return;
+    }
+    console.log('next');
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  },[contacts])
+
+  const handleContactFormSubmit = values => {
+    setContacts([values, ...contacts]);
   };
 
-  componentDidMount() {
-    const contacts = JSON.parse(localStorage.getItem('contacts'));
-    if (contacts) {
-      this.setState({ contacts: contacts });
-    };
-  }
-  
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.contacts !== this.state.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-    };
-  }
-
-  handleContactFormSubmit = values => {
-    this.setState({ contacts: [values, ...this.state.contacts] });
-  };
-
-  deleteContact = contactId => {
-    this.setState(prevstate => ({
-      contacts: prevstate.contacts.filter(contact => contact.id !== contactId),
-    })
-  );
+  const deleteContact = contactId => {
+    setContacts(contacts.filter(contact => contact.id !== contactId));
 };
 
-  changeFilter = ev => {
-    this.setState({filter: ev.target.value})
+  const changeFilter = ev => {
+    setFilter(ev.target.value);
+    
   }
 
-  render() {
-    const { contacts, filter } = this.state;
     const normalizedFilter = filter.toLowerCase();
     const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
 
     return (
       <AppContainer>
         <h1>Phonebook</h1>
-        <ContactForm formSubmit={this.handleContactFormSubmit} />
+        <ContactForm formSubmit={handleContactFormSubmit} />
         <h2>Contacts</h2>
-        <FilterContacts value={filter} onChange={this.changeFilter} />
-        <ContactList contacts={filteredContacts} onDelete={this.deleteContact} />
+        <FilterContacts value={filter} onChange={changeFilter} />
+        <ContactList contacts={filteredContacts} onDelete={deleteContact} />
       </AppContainer>
     );
   }
-};
 
 export default App ;
 
