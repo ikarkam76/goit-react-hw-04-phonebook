@@ -10,7 +10,11 @@ const App = () => {
 
   useEffect(() => {  
     if (!contacts[0]) {
-      setContacts(JSON.parse(localStorage.getItem('contacts')));
+      const storageContacts = JSON.parse(localStorage.getItem('contacts'));
+      if (!storageContacts) {
+        return;
+      }
+      setContacts(storageContacts);
       console.log('open');
       return;
     }
@@ -31,8 +35,8 @@ const App = () => {
     
   }
 
-    const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
+  const normalizedFilter = filter.toLowerCase();
+  const filteredContacts = contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
 
     return (
       <AppContainer>
