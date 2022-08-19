@@ -5,19 +5,13 @@ import FilterContacts from "components/FilterContacts";
 import AppContainer from "components/App.styled";
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => { return JSON.parse(localStorage.getItem('contacts')) ?? []; });
   const [filter, setFilter] = useState('');
 
   useEffect(() => {  
     if (!contacts[0]) {
-      const storageContacts = JSON.parse(localStorage.getItem('contacts'));
-      if (!storageContacts) {
         return;
       }
-      setContacts(storageContacts);
-      console.log('open');
-      return;
-    }
     console.log('next');
     window.localStorage.setItem('contacts', JSON.stringify(contacts));
   },[contacts])
