@@ -12,16 +12,26 @@ const App = () => {
     if (!contacts[0]) {
         return;
       }
-    console.log('next');
     window.localStorage.setItem('contacts', JSON.stringify(contacts));
   },[contacts])
 
   const handleContactFormSubmit = values => {
-    setContacts([values, ...contacts]);
+    if (Number(values.name)) {
+      alert('The name must contain letters!');
+      return;
+    }
+      contacts.find(contact => contact.name === values.name)
+        ? alert('This name is already in contacts!')
+        : setContacts([values, ...contacts]);
   };
 
   const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
+    if (contacts.length === 1) {
+      window.localStorage.removeItem('contacts');
+      setContacts([]);
+      return;
+    }
+      setContacts(contacts.filter(contact => contact.id !== contactId));
 };
 
   const changeFilter = ev => {

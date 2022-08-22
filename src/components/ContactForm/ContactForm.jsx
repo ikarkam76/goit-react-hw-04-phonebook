@@ -6,8 +6,8 @@ import * as yup from 'yup';
 import { FormButton, FormContainer, FormLabel } from './ContactForm.styled';
 
 const schema = yup.object().shape({
-    name: yup.string().required('Please enter your name!'),
-    number: yup.number().required('Please enter your number'),
+    name: yup.string().required('Please enter name!'),
+    number: yup.number().required('Please enter number!'),
 });
 
 const initialValues = {
