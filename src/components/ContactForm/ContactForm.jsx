@@ -1,14 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, } from 'formik';
 import { nanoid } from 'nanoid';
 import * as yup from 'yup';
 import { FormButton, FormContainer, FormLabel } from './ContactForm.styled';
 
-const schema = yup.object().shape({
-    name: yup.string().required('Please enter name!'),
-    number: yup.number().required('Please enter number!'),
+const validationSchema = yup.object().shape({
+  name: yup.string().required('Please enter name!'),
+  number: yup.number().required('Please enter number!'),
 });
+
+const validate = value => {
+  let errorMessage;
+  if (!/^[a-zA-Z]/.test(value)) {
+    errorMessage = 'The name must start with letters!';
+  }
+  return errorMessage;
+};
 
 const initialValues = {
   name: '',
@@ -22,16 +30,17 @@ const ContactForm = ({formSubmit}) => {
         formSubmit(values);
         resetForm();
     }
+    
     return (
       <FormContainer>
         <Formik
           initialValues={initialValues}
-          validationSchema={schema}
+          validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
           <Form autoComplete="off">
             <FormLabel htmlFor="name">Name</FormLabel>
-            <Field name="name" type="text" />
+            <Field validate={validate} name="name" type="text" />
             <ErrorMessage component="div" name="name" />
             <FormLabel htmlFor="tel">Number</FormLabel>
             <Field name="number" type="tel" />

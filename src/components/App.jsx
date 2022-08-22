@@ -16,10 +16,6 @@ const App = () => {
   },[contacts])
 
   const handleContactFormSubmit = values => {
-    if (Number(values.name)) {
-      alert('The name must contain letters!');
-      return;
-    }
       contacts.find(contact => contact.name === values.name)
         ? alert('This name is already in contacts!')
         : setContacts([values, ...contacts]);
